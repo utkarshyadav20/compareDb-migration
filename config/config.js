@@ -1,41 +1,30 @@
 require('dotenv').config();
 
+// Check for cloud indication in either DB_HOST or DATABASE_URL
+const isCloud = 
+  (process.env.DB_HOST && process.env.DB_HOST.includes('supabase.com')) ||
+  (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('supabase.com'));
+
+const baseConfig = {
+  // If DATABASE_URL is present, tell Sequelize to use it
+  ...(process.env.DATABASE_URL ? { use_env_variable: 'DATABASE_URL' } : {}),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT || 5432,
+  dialect: 'postgres',
+  dialectOptions: isCloud ? {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    },
+    prepareThreshold: 0
+  } : {}
+};
+
 module.exports = {
-  development: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_INSTANCE_JOB,
-    dialect: 'postgres', // Hardcoding postgres as 'DB_CONNECTION' might be different or 'postgres' is standard here
-    port: process.env.DB_PORT,
-    dialectOptions: {
-       // ssl: {
-       //   require: true,
-       //   rejectUnauthorized: false
-       // }
-       // Uncomment if SSL is needed, usually for production/staging
-    }
-  },
-  test: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME_TEST || 'database_test',
-    host: process.env.DB_INSTANCE_JOB,
-    dialect: 'postgres',
-    port: process.env.DB_PORT
-  },
-  production: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_INSTANCE_JOB,
-    dialect: 'postgres',
-    port: process.env.DB_PORT,
-    dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-    }
-  }
+  development: baseConfig,
+  test: baseConfig,
+  production: baseConfig,
 };

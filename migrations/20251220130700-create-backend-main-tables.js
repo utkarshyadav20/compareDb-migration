@@ -51,7 +51,7 @@ module.exports = {
         allowNull: true,
       },
       Extracted_image: {
-        type: Sequelize.BLOB('long'),
+        type: Sequelize.TEXT,
         allowNull: true,
       },
       Project_type: {
@@ -92,7 +92,8 @@ module.exports = {
       },
       image_name: {
         type: Sequelize.STRING,
-        allowNull: true,
+        primaryKey: true,
+        allowNull: false,
       },
       diff_percent: {
         type: Sequelize.INTEGER,
@@ -103,12 +104,13 @@ module.exports = {
         allowNull: true,
       },
       heapmap_result: {
-        type: Sequelize.BLOB,
+        type: Sequelize.TEXT,
         allowNull: true,
       },
       Build_id: {
         type: Sequelize.STRING,
-        allowNull: true,
+        primaryKey: true,
+        allowNull: false,
       },
     });
 
@@ -129,7 +131,7 @@ module.exports = {
         allowNull: true,
       },
       Screenshot: {
-        type: Sequelize.BLOB,
+        type: Sequelize.TEXT,
         allowNull: true,
       },
     });
