@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      Project_type: {
+      project_type: {
         type: Sequelize.STRING,
         allowNull: true,
       },
